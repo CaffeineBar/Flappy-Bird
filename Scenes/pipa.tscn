@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://dgu7bf3wya153"]
+
+[ext_resource type="Script" uid="uid://vbtlf156sihs" path="res://Scripts/pipa.gd" id="1_5a35e"]
+[ext_resource type="Texture2D" uid="uid://bchfgq74ynkiv" path="res://Assets/pipe.png" id="2_c44bg"]
+[ext_resource type="AudioStream" uid="uid://bcnrprq4iibbq" path="res://Assets/[freesound] score 1.mp3" id="3_c44bg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hptm8"]
+size = Vector2(78, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d1ilt"]
+size = Vector2(72, 524)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6iyac"]
+size = Vector2(78, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fdnlq"]
+size = Vector2(72, 524)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5a35e"]
+size = Vector2(20, 200)
+
+[node name="Pipa" type="Area2D" groups=["banyak_pipa"]]
+scale = Vector2(0.7, 0.7)
+script = ExtResource("1_5a35e")
+
+[node name="Atas" type="Sprite2D" parent="."]
+texture = ExtResource("2_c44bg")
+offset = Vector2(0, -380)
+flip_v = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -118)
+shape = SubResource("RectangleShape2D_hptm8")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, -398)
+shape = SubResource("RectangleShape2D_d1ilt")
+
+[node name="Bawah" type="Sprite2D" parent="."]
+texture = ExtResource("2_c44bg")
+offset = Vector2(0, 380)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(0, 118)
+shape = SubResource("RectangleShape2D_6iyac")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="."]
+position = Vector2(0, 398)
+shape = SubResource("RectangleShape2D_fdnlq")
+
+[node name="CetakSkor" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CetakSkor"]
+position = Vector2(38.5714, 0)
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_5a35e")
+
+[node name="Poin" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_c44bg")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="CetakSkor" to="." method="_on_cetak_skor_body_entered"]

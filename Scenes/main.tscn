@@ -1,0 +1,130 @@
+[gd_scene load_steps=20 format=3 uid="uid://dqiuhkn1npob5"]
+
+[ext_resource type="Texture2D" uid="uid://d0ykoplahli6d" path="res://Assets/bg.png" id="1_jjvhh"]
+[ext_resource type="Script" uid="uid://0j80yo2bbyet" path="res://Scripts/main.gd" id="2_6bp64"]
+[ext_resource type="Script" uid="uid://h5dmvmuj0n47" path="res://Scripts/burung.gd" id="2_21xkr"]
+[ext_resource type="Texture2D" uid="uid://c8kcjh8tfpej8" path="res://Assets/bird1.png" id="2_kry3j"]
+[ext_resource type="Texture2D" uid="uid://t2yy3w56k7jw" path="res://Assets/bird2.png" id="3_21xkr"]
+[ext_resource type="Texture2D" uid="uid://citr2o81yfsut" path="res://Assets/bird3.png" id="4_6bp64"]
+[ext_resource type="Texture2D" uid="uid://cp4p2ctn88xbs" path="res://Assets/ground.png" id="7_6bp64"]
+[ext_resource type="Script" uid="uid://w65436snrohe" path="res://Scripts/tanah.gd" id="7_344ge"]
+[ext_resource type="PackedScene" uid="uid://dgu7bf3wya153" path="res://Scenes/pipa.tscn" id="9_ynf5e"]
+[ext_resource type="FontFile" uid="uid://b0obqo73rrb40" path="res://Assets/Gamer.ttf" id="10_hptm8"]
+[ext_resource type="Script" uid="uid://de5luyk0xxno2" path="res://Scripts/game_over.gd" id="11_6iyac"]
+[ext_resource type="Texture2D" uid="uid://mrgwe25nbnt" path="res://Assets/restart.png" id="12_fdnlq"]
+[ext_resource type="AudioStream" uid="uid://djxhiejvomsln" path="res://Assets/[freesound] lose c 04.wav" id="13_fdnlq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_344ge"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_kry3j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_21xkr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_6bp64")
+}],
+"loop": true,
+"name": &"terbang",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynf5e"]
+radius = 20.0
+height = 54.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_344ge"]
+size = Vector2(3456, 84)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkdf5"]
+texture = ExtResource("12_fdnlq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wsu2k"]
+texture = ExtResource("12_fdnlq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k12tt"]
+texture = ExtResource("12_fdnlq")
+
+[node name="Sprite2D" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_jjvhh")
+centered = false
+script = ExtResource("2_6bp64")
+scene_pipa = ExtResource("9_ynf5e")
+
+[node name="Burung" type="CharacterBody2D" parent="."]
+scale = Vector2(0.7, 0.7)
+script = ExtResource("2_21xkr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Burung"]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_344ge")
+animation = &"terbang"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Burung"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ynf5e")
+
+[node name="Tanah" type="Area2D" parent="."]
+z_index = 1
+position = Vector2(0, 606)
+script = ExtResource("7_344ge")
+
+[node name="Sprite2D" type="Sprite2D" parent="Tanah"]
+texture = ExtResource("7_6bp64")
+offset = Vector2(864, 0)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Tanah/Sprite2D"]
+position = Vector2(1728, 0)
+texture = ExtResource("7_6bp64")
+offset = Vector2(864, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tanah"]
+position = Vector2(1728, 0)
+shape = SubResource("RectangleShape2D_344ge")
+
+[node name="WaktuPipa" type="Timer" parent="."]
+wait_time = 1.5
+
+[node name="LabelSkor" type="Label" parent="."]
+z_index = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("10_hptm8")
+theme_override_font_sizes/font_size = 50
+text = "SKOR: 0"
+
+[node name="GameOver" type="CanvasLayer" parent="."]
+script = ExtResource("11_6iyac")
+
+[node name="Button" type="Button" parent="GameOver"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -31.5
+offset_right = 80.0
+offset_bottom = 31.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/hover = SubResource("StyleBoxTexture_jkdf5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wsu2k")
+theme_override_styles/normal = SubResource("StyleBoxTexture_k12tt")
+
+[node name="Kalah" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("13_fdnlq")
+
+[connection signal="body_entered" from="Tanah" to="Tanah" method="_on_body_entered"]
+[connection signal="hit" from="Tanah" to="." method="_on_tanah_hit"]
+[connection signal="timeout" from="WaktuPipa" to="." method="_on_waktu_pipa_timeout"]
+[connection signal="restart" from="GameOver" to="." method="_on_game_over_restart"]
+[connection signal="pressed" from="GameOver/Button" to="GameOver" method="_on_button_pressed"]

@@ -1,0 +1,9 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Ekspor dan Editor lokal
+export.cfg
+export_presets.cfg
+*.tmp
+.import/
